@@ -1,0 +1,7 @@
+pangu compiler
+--------------
+
+The compiler's job is simple: Take the description of an XML document written in
+one of the various available XML Grammar languages such as DTD, XSD or RNG and 
+produce a data structure that contains all of the information required to 
+produce the documents that respect this grammar.

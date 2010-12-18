@@ -1,0 +1,157 @@
+<?xml version="1.0" ?>
+
+<project default="build">
+	<loadproperties srcfile="build.properties"/>
+	
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="lib/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+
+	<target name="build"
+		    depends="init,compile" 
+		    description="build pangu">
+	</target>
+
+	<target name="init" description="initialize target">
+		<mkdir dir="build"/>
+		<mkdir dir="build/classes"/>
+
+		<path id="pangu.classpath">
+			<fileset id="pangu.fileset" dir="lib">
+				<include name="**/*.jar"/>
+			</fileset>
+			<fileset file="build/pangu.jar"/>
+		</path>
+	</target>
+	
+	<target name="junit.init">
+		<!-- check junit is correctly setup --> 
+        <available file="${junit.home}" type="dir" property="junit.ready"/>
+        <if>
+            <isset property="junit.ready"/>
+			<then>
+				<property name="javac.excludes" value=""/>
+				<path id="junit.classpath">
+				    <fileset dir="${junit.home}">
+				        <include name="*.jar" />
+				    </fileset>
+				</path>
+			</then>
+			<else>
+				<property name="javac.excludes" value="**/junit/**"/>
+				<path id="junit.classpath"/>
+				<echo>JUnit not tests not being compiled</echo>
+			</else>
+		</if>
+	</target>
+
+	<target name="compile" depends="junit.init" description="Compilation target">
+		<javac srcdir="src"
+		   	   destdir="build/classes"
+			   debug="on"
+			   debuglevel="lines,vars,source"
+			   encoding="ISO-8859-1"
+			   excludes="${javac.excludes}"
+			   classpath="${junit.lib}">
+			<classpath refid="pangu.classpath"/>
+			<classpath refid="junit.classpath"/>
+		</javac>
+		
+		<tstamp>
+		    <!-- build id -->
+		    <format property="build.id" pattern="yyyyMMddHHmmssSZ"/>
+	    </tstamp>
+		
+	</target>
+
+	<target name="dist" depends="init,build" description="distribution target">
+		<jar jarfile="build/pangu-${version}.jar" 
+			 basedir="build/classes"
+		 	 includes="**/**"
+			 excludes="**/junit/**"
+			 />
+
+		<jar jarfile="build/pangu-test-${version}.jar" 
+			 basedir="build/classes"
+			 includes="**/junit/**"
+			 />
+
+		<copy todir="build">
+			<fileset refid="pangu.fileset"/>
+		</copy>
+
+		<copy todir="build/test">
+			<fileset dir="test"/>
+		</copy>
+		
+		<copy todir="build">
+			<fileset file="log4j.properties"/>
+		</copy>
+		<echo>built pangu jar at build/pangu.jar</echo>
+	</target>
+
+	<target name="clean" description="clean target">
+		<delete dir="build" failonerror="true"/>
+	</target>
+
+	<target name="junit" depends="junit.init">
+		<!-- check junit is correctly setup -->	
+	    <available file="${junit.home}" type="dir" property="junit.ready"/>
+	    <if>
+	        <isset property="junit.ready"/>
+	        <then>
+        		<taskdef name="junit" 
+        	             classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">
+        			<classpath refid="junit.classpath"/>
+        		</taskdef>
+        
+        		<mkdir dir="build/junit_results"/>
+        		<path id="pangu.classpath">
+        			<fileset dir="build">
+        				<include name="*.jar"/>
+        			</fileset>
+        		</path>
+        
+				<junit printsummary="yes" 
+				   	   showoutput="true" 
+					   dir="build">
+				    <jvmarg line="-enableassertions"/>
+					<sysproperty key="pangu.home" value="build"/>
+					<sysproperty key="net.sourceforge.cobertura.datafile"
+		    			         value="build/cobertura-junit.ser" />
+					<syspropertyset>
+						<propertyref builtin="commandline"/>
+					</syspropertyset>
+					<classpath path="build"/>
+					<classpath refid="pangu.classpath"/>
+				    <classpath refid="junit.classpath"/>
+					<formatter type="xml"/>
+					<batchtest fork="true"
+					           todir="build/junit_results">
+						<fileset dir="build/classes">
+							<include name="**/junit/*.class"/>
+						</fileset>
+					</batchtest>
+				</junit>
+			</then>
+	    	<else>
+            	<fail message="junit home not set correctly, see build.properties file"/>
+	    	</else>
+        </if>
+	</target>
+	
+	<target name="junit-reports">
+		<mkdir dir="build/reports"/>
+		<mkdir dir="build/reports/html"/>
+		
+        <junitreport todir="build/reports">
+            <fileset dir="build">
+                 <include name="**/TEST*.xml"/>
+            </fileset>
+            <report format="frames" todir="build/reports/html"/>
+        </junitreport>
+	</target>
+
+</project>

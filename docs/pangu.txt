@@ -1,0 +1,13 @@
+pangu
+-----
+
+Pangu is a very simple data generating library that uses an XML grammar to 
+generate documents of various types. Currently we can generate XML and JSON 
+documents using pangu but you can build a simple document formatter to generate
+documents of other types.
+
+Here you'll find all of the documentation written for this library including
+some design documentation on decisions made about the way pangu works with the
+grammar languages and compiles them into a neutral structure to generate 
+documents from.
+

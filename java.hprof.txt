@@ -1,0 +1,615 @@
+JAVA PROFILE 1.0.1, created Sun Dec 12 17:08:42 2010
+
+Header for -agentlib:hprof (or -Xrunhprof) ASCII Output (JDK 5.0 JVMTI based)
+
+%W% %E%
+
+ Copyright (c) 2006 Sun Microsystems, Inc. All  Rights Reserved.
+
+WARNING!  This file format is under development, and is subject to
+change without notice.
+
+This file contains the following types of records:
+
+THREAD START
+THREAD END      mark the lifetime of Java threads
+
+TRACE           represents a Java stack trace.  Each trace consists
+                of a series of stack frames.  Other records refer to
+                TRACEs to identify (1) where object allocations have
+                taken place, (2) the frames in which GC roots were
+                found, and (3) frequently executed methods.
+
+HEAP DUMP       is a complete snapshot of all live objects in the Java
+                heap.  Following distinctions are made:
+
+                ROOT    root set as determined by GC
+                CLS     classes 
+                OBJ     instances
+                ARR     arrays
+
+SITES           is a sorted list of allocation sites.  This identifies
+                the most heavily allocated object types, and the TRACE
+                at which those allocations occurred.
+
+CPU SAMPLES     is a statistical profile of program execution.  The VM
+                periodically samples all running threads, and assigns
+                a quantum to active TRACEs in those threads.  Entries
+                in this record are TRACEs ranked by the percentage of
+                total quanta they consumed; top-ranked TRACEs are
+                typically hot spots in the program.
+
+CPU TIME        is a profile of program execution obtained by measuring
+                the time spent in individual methods (excluding the time
+                spent in callees), as well as by counting the number of
+                times each method is called. Entries in this record are
+                TRACEs ranked by the percentage of total CPU time. The
+                "count" field indicates the number of times each TRACE 
+                is invoked.
+
+MONITOR TIME    is a profile of monitor contention obtained by measuring
+                the time spent by a thread waiting to enter a monitor.
+                Entries in this record are TRACEs ranked by the percentage
+                of total monitor contention time and a brief description
+                of the monitor.  The "count" field indicates the number of 
+                times the monitor was contended at that TRACE.
+
+MONITOR DUMP    is a complete snapshot of all the monitors and threads in 
+                the System.
+
+HEAP DUMP, SITES, CPU SAMPLES|TIME and MONITOR DUMP|TIME records are generated 
+at program exit.  They can also be obtained during program execution by typing 
+Ctrl-\ (on Solaris) or by typing Ctrl-Break (on Win32).
+
+--------
+
+THREAD START (obj=5000013f, id = 200001, name="main", group="main")
+THREAD START (obj=5000013f, id = 200004, name="ReaderThread", group="main")
+THREAD END (id = 200004)
+THREAD START (obj=5000013f, id = 200006, name="Thread-0", group="main")
+THREAD END (id = 200006)
+THREAD END (id = 200001)
+THREAD END (id = 200002)
+TRACE 300079:
+	java.net.SocketInputStream.socketRead0(SocketInputStream.java:Unknown line)
+	java.net.SocketInputStream.read(SocketInputStream.java:129)
+	sun.nio.cs.StreamDecoder.readBytes(StreamDecoder.java:264)
+	sun.nio.cs.StreamDecoder.implRead(StreamDecoder.java:306)
+TRACE 300458:
+	java.io.OutputStream.write(OutputStream.java:98)
+	java.io.OutputStream.write(OutputStream.java:58)
+	org.pangu.tree.PanguNode.print(PanguNode.java:115)
+	org.pangu.tree.DataNode.generate(DataNode.java:77)
+TRACE 300457:
+	java.io.OutputStream.write(OutputStream.java:99)
+	java.io.OutputStream.write(OutputStream.java:58)
+	org.pangu.tree.PanguNode.print(PanguNode.java:115)
+	org.pangu.tree.DataNode.generate(DataNode.java:77)
+TRACE 300454:
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:352)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:447)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:544)
+	java.lang.StringCoding$StringEncoder.encode(StringCoding.java:240)
+TRACE 300465:
+	java.nio.Buffer.<init>(Buffer.java:176)
+	java.nio.ByteBuffer.<init>(ByteBuffer.java:259)
+	java.nio.HeapByteBuffer.<init>(HeapByteBuffer.java:52)
+	java.nio.ByteBuffer.wrap(ByteBuffer.java:350)
+TRACE 300461:
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:390)
+	java.lang.StringBuffer.append(StringBuffer.java:224)
+	java.lang.StringBuffer.append(StringBuffer.java:284)
+	org.pangu.tree.generators.StringGenerator.buildString(StringGenerator.java:34)
+TRACE 300460:
+	java.lang.StringCoding$StringEncoder.encode(StringCoding.java:232)
+	java.lang.StringCoding.encode(StringCoding.java:272)
+	java.lang.StringCoding.encode(StringCoding.java:284)
+	java.lang.String.getBytes(String.java:986)
+TRACE 300464:
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:390)
+	java.lang.StringBuffer.append(StringBuffer.java:224)
+	org.pangu.tree.generators.StringGenerator.buildString(StringGenerator.java:36)
+	org.pangu.tree.generators.StringGenerator.generate(StringGenerator.java:23)
+TRACE 300467:
+	java.lang.String.<init>(String.java:215)
+	java.lang.StringBuffer.toString(StringBuffer.java:585)
+	org.pangu.tree.generators.StringGenerator.buildString(StringGenerator.java:41)
+	org.pangu.tree.generators.StringGenerator.generate(StringGenerator.java:23)
+TRACE 300490:
+	java.lang.StringCoding.encode(StringCoding.java:272)
+	java.lang.StringCoding.encode(StringCoding.java:284)
+	java.lang.String.getBytes(String.java:986)
+	org.pangu.tree.DataNode.generate(DataNode.java:77)
+TRACE 300480:
+	java.lang.String.substring(String.java:1939)
+	java.lang.String.subSequence(String.java:1972)
+	org.pangu.tree.generators.StringGenerator.buildString(StringGenerator.java:34)
+	org.pangu.tree.generators.StringGenerator.generate(StringGenerator.java:23)
+TRACE 300482:
+	sun.nio.cs.UTF_8.updatePositions(UTF_8.java:59)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:392)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:447)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:544)
+TRACE 300488:
+	java.util.Arrays.copyOf(Arrays.java:2882)
+	java.lang.AbstractStringBuilder.expandCapacity(AbstractStringBuilder.java:100)
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:390)
+	java.lang.StringBuffer.append(StringBuffer.java:224)
+TRACE 300493:
+	java.util.ArrayList.get(ArrayList.java:322)
+	java.util.AbstractList$Itr.next(AbstractList.java:345)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:43)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:94)
+TRACE 300510:
+	java.lang.Shutdown.halt0(Shutdown.java:Unknown line)
+	java.lang.Shutdown.halt(Shutdown.java:95)
+	java.lang.Shutdown.exit(Shutdown.java:169)
+	java.lang.Runtime.exit(Runtime.java:90)
+TRACE 300313:
+	java.net.SocketOutputStream.socketWrite0(SocketOutputStream.java:Unknown line)
+	java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:92)
+	java.net.SocketOutputStream.write(SocketOutputStream.java:136)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:202)
+TRACE 300455:
+	java.lang.String.equals(String.java:1017)
+	java.lang.StringCoding.encode(StringCoding.java:260)
+	java.lang.StringCoding.encode(StringCoding.java:284)
+	java.lang.String.getBytes(String.java:986)
+TRACE 300456:
+	java.lang.ThreadLocal$ThreadLocalMap.access$000(ThreadLocal.java:242)
+	java.lang.ThreadLocal.get(ThreadLocal.java:127)
+	java.lang.StringCoding.deref(StringCoding.java:46)
+	java.lang.StringCoding.encode(StringCoding.java:258)
+TRACE 300478:
+	java.nio.HeapByteBuffer.<init>(HeapByteBuffer.java:52)
+	java.nio.ByteBuffer.wrap(ByteBuffer.java:350)
+	java.nio.ByteBuffer.wrap(ByteBuffer.java:373)
+	java.lang.StringCoding$StringEncoder.encode(StringCoding.java:237)
+TRACE 300005:
+	java.security.AccessController.doPrivileged(AccessController.java:Unknown line)
+	java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+	sun.misc.Launcher$ExtClassLoader.findClass(Launcher.java:229)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:307)
+TRACE 300012:
+	sun.misc.URLClassPath$JarLoader.parseExtensionsDependencies(URLClassPath.java:922)
+	sun.misc.URLClassPath$JarLoader.getClassPath(URLClassPath.java:902)
+	sun.misc.URLClassPath.getLoader(URLClassPath.java:302)
+	sun.misc.URLClassPath.getResource(URLClassPath.java:168)
+TRACE 300020:
+	sun.misc.URLClassPath$FileLoader.getResource(URLClassPath.java:1000)
+	sun.misc.URLClassPath.getResource(URLClassPath.java:169)
+	java.net.URLClassLoader$1.run(URLClassLoader.java:194)
+	java.security.AccessController.doPrivileged(AccessController.java:Unknown line)
+TRACE 300034:
+	java.security.ProtectionDomain.<clinit>(ProtectionDomain.java:402)
+	java.security.SecureClassLoader.getProtectionDomain(SecureClassLoader.java:236)
+	java.security.SecureClassLoader.defineClass(SecureClassLoader.java:141)
+	java.net.URLClassLoader.defineClass(URLClassLoader.java:283)
+TRACE 300037:
+	java.lang.ClassLoader.defineClass1(ClassLoader.java:Unknown line)
+	java.lang.ClassLoader.defineClassCond(ClassLoader.java:632)
+	java.lang.ClassLoader.defineClass(ClassLoader.java:616)
+	java.security.SecureClassLoader.defineClass(SecureClassLoader.java:141)
+TRACE 300039:
+	java.lang.AbstractStringBuilder.<init>(AbstractStringBuilder.java:45)
+	java.lang.StringBuffer.<init>(StringBuffer.java:91)
+	java.net.URLStreamHandler.toExternalForm(URLStreamHandler.java:473)
+	java.net.URL.toExternalForm(URL.java:901)
+TRACE 300062:
+	java.net.URI.<clinit>(URI.java:2523)
+	java.net.SocksSocketImpl.connect(SocksSocketImpl.java:350)
+	java.net.Socket.connect(Socket.java:529)
+	java.net.Socket.connect(Socket.java:478)
+TRACE 300078:
+	java.lang.StringCoding.decode(StringCoding.java:161)
+	java.lang.String.<init>(String.java:443)
+	java.util.jar.Attributes.read(Attributes.java:401)
+	java.util.jar.Manifest.read(Manifest.java:182)
+TRACE 300092:
+	java.util.zip.InflaterInputStream.<init>(InflaterInputStream.java:71)
+	java.util.zip.ZipFile$1.<init>(ZipFile.java:212)
+	java.util.zip.ZipFile.getInputStream(ZipFile.java:212)
+	java.util.zip.ZipFile.getInputStream(ZipFile.java:180)
+TRACE 300093:
+	java.util.zip.ZipFile.ensureOpen(ZipFile.java:406)
+	java.util.zip.ZipFile.getInputStream(ZipFile.java:194)
+	java.util.zip.ZipFile.getInputStream(ZipFile.java:180)
+	java.util.jar.JarFile.getBytes(JarFile.java:361)
+TRACE 300121:
+	java.util.Arrays.copyOf(Arrays.java:2786)
+	java.io.ByteArrayOutputStream.write(ByteArrayOutputStream.java:94)
+	java.io.OutputStream.write(OutputStream.java:58)
+	sun.security.util.DerValue.encode(DerValue.java:391)
+TRACE 300145:
+	sun.security.provider.X509Factory.engineGenerateCertificate(X509Factory.java:90)
+	java.security.cert.CertificateFactory.generateCertificate(CertificateFactory.java:305)
+	sun.security.pkcs.PKCS7.parseSignedData(PKCS7.java:267)
+	sun.security.pkcs.PKCS7.parse(PKCS7.java:141)
+TRACE 300173:
+	java.lang.String.toUpperCase(String.java:2548)
+	java.security.Provider$ServiceKey.<init>(Provider.java:500)
+	java.security.Provider$ServiceKey.<init>(Provider.java:493)
+	java.security.Provider.parseLegacyPut(Provider.java:595)
+TRACE 300201:
+	java.io.ByteArrayInputStream.skip(ByteArrayInputStream.java:192)
+	sun.security.util.DerValue.<init>(DerValue.java:265)
+	sun.security.util.DerInputStream.getDerValue(DerInputStream.java:400)
+	sun.security.x509.Extension.<init>(Extension.java:64)
+TRACE 300208:
+	java.util.HashMap.hash(HashMap.java:251)
+	java.util.HashMap.getEntry(HashMap.java:344)
+	java.util.LinkedHashMap.get(LinkedHashMap.java:280)
+	java.security.Provider.getService(Provider.java:677)
+TRACE 300222:
+	java.util.regex.Pattern.<clinit>(Pattern.java:4617)
+	java.lang.String.split(String.java:2292)
+	java.lang.String.split(String.java:2334)
+	java.security.Provider$Service.hasKeyAttributes(Provider.java:1379)
+TRACE 300243:
+	java.math.BigInteger.oddModPow(BigInteger.java:1704)
+	java.math.BigInteger.modPow(BigInteger.java:1571)
+	sun.security.rsa.RSACore.crypt(RSACore.java:96)
+	sun.security.rsa.RSACore.rsa(RSACore.java:74)
+TRACE 300254:
+	java.util.zip.Inflater.inflateBytes(Inflater.java:Unknown line)
+	java.util.zip.Inflater.inflate(Inflater.java:238)
+	java.util.zip.InflaterInputStream.read(InflaterInputStream.java:135)
+	java.io.DataInputStream.readFully(DataInputStream.java:178)
+TRACE 300258:
+	sun.reflect.generics.parser.SignatureParser.parseSimpleClassTypeSignature(SignatureParser.java:258)
+	sun.reflect.generics.parser.SignatureParser.parseClassTypeSignature(SignatureParser.java:243)
+	sun.reflect.generics.parser.SignatureParser.parseFieldTypeSignature(SignatureParser.java:228)
+	sun.reflect.generics.parser.SignatureParser.parseTypeSignature(SignatureParser.java:359)
+TRACE 300290:
+	java.io.DataOutputStream.writeUTF(DataOutputStream.java:330)
+	java.io.DataOutputStream.writeUTF(DataOutputStream.java:306)
+	sun.misc.ProxyGenerator$ConstantPool$ValueEntry.write(ProxyGenerator.java:1899)
+	sun.misc.ProxyGenerator$ConstantPool.write(ProxyGenerator.java:1806)
+TRACE 300296:
+	java.lang.String.format(String.java:2769)
+	org.junit.runner.Description.createTestDescription(Description.java:51)
+	org.junit.runners.BlockJUnit4ClassRunner.describeChild(BlockJUnit4ClassRunner.java:88)
+	org.junit.runners.BlockJUnit4ClassRunner.describeChild(BlockJUnit4ClassRunner.java:50)
+TRACE 300314:
+	java.util.zip.ZipFile.getEntry(ZipFile.java:Unknown line)
+	java.util.zip.ZipFile.getEntry(ZipFile.java:149)
+	java.util.jar.JarFile.getEntry(JarFile.java:208)
+	java.util.jar.JarFile.getJarEntry(JarFile.java:191)
+TRACE 300317:
+	java.io.BufferedReader.readLine(BufferedReader.java:288)
+	java.io.BufferedReader.readLine(BufferedReader.java:362)
+	sun.misc.MetaIndex.registerDirectory(MetaIndex.java:166)
+	sun.misc.Launcher$1.run(Launcher.java:380)
+TRACE 300323:
+	java.util.zip.ZipFile.read(ZipFile.java:Unknown line)
+	java.util.zip.ZipFile.access$1200(ZipFile.java:29)
+	java.util.zip.ZipFile$ZipFileInputStream.read(ZipFile.java:447)
+	java.util.zip.ZipFile$1.fill(ZipFile.java:230)
+TRACE 300324:
+	sun.misc.URLClassPath.getResource(URLClassPath.java:163)
+	java.net.URLClassLoader$1.run(URLClassLoader.java:194)
+	java.security.AccessController.doPrivileged(AccessController.java:Unknown line)
+	java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+TRACE 300351:
+	java.io.UnixFileSystem.getBooleanAttributes0(UnixFileSystem.java:Unknown line)
+	java.io.UnixFileSystem.getBooleanAttributes(UnixFileSystem.java:228)
+	java.io.File.exists(File.java:733)
+	sun.misc.URLClassPath$FileLoader.getResource(URLClassPath.java:999)
+TRACE 300360:
+	java.beans.Introspector.getBeanInfo(Introspector.java:412)
+	java.beans.Introspector.getBeanInfo(Introspector.java:164)
+	java.beans.Introspector.getBeanInfo(Introspector.java:227)
+	java.beans.Introspector.<init>(Introspector.java:386)
+TRACE 300374:
+	com.sun.org.apache.xerces.internal.parsers.SecuritySupport.getParentClassLoader(SecuritySupport.java:73)
+	com.sun.org.apache.xerces.internal.parsers.ObjectFactory.findClassLoader(ObjectFactory.java:316)
+	com.sun.org.apache.xerces.internal.parsers.ObjectFactory.createObject(ObjectFactory.java:130)
+	com.sun.org.apache.xerces.internal.parsers.ObjectFactory.createObject(ObjectFactory.java:97)
+TRACE 300401:
+	com.sun.org.apache.xerces.internal.parsers.XML11Configuration.<init>(XML11Configuration.java:526)
+	com.sun.org.apache.xerces.internal.parsers.XIncludeAwareParserConfiguration.<init>(XIncludeAwareParserConfiguration.java:125)
+	com.sun.org.apache.xerces.internal.parsers.XIncludeAwareParserConfiguration.<init>(XIncludeAwareParserConfiguration.java:86)
+	sun.reflect.NativeConstructorAccessorImpl.newInstance0(NativeConstructorAccessorImpl.java:Unknown line)
+TRACE 300437:
+	com.sun.org.apache.xerces.internal.parsers.AbstractDOMParser.startDocument(AbstractDOMParser.java:806)
+	com.sun.org.apache.xerces.internal.impl.dtd.XMLDTDValidator.startDocument(XMLDTDValidator.java:663)
+	com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.startEntity(XMLDocumentScannerImpl.java:588)
+	com.sun.org.apache.xerces.internal.impl.XMLVersionDetector.startDocumentParsing(XMLVersionDetector.java:172)
+TRACE 300444:
+	com.sun.org.apache.xerces.internal.dom.DeferredDocumentImpl.getNodeObject(DeferredDocumentImpl.java:1067)
+	com.sun.org.apache.xerces.internal.dom.DeferredDocumentImpl.synchronizeChildren(DeferredDocumentImpl.java:1741)
+	com.sun.org.apache.xerces.internal.dom.DeferredElementImpl.synchronizeChildren(DeferredElementImpl.java:132)
+	com.sun.org.apache.xerces.internal.dom.ParentNode.getChildNodes(ParentNode.java:215)
+TRACE 300451:
+	java.lang.StringCoding$StringEncoder.encode(StringCoding.java:231)
+	java.lang.StringCoding.encode(StringCoding.java:272)
+	java.lang.StringCoding.encode(StringCoding.java:284)
+	java.lang.String.getBytes(String.java:986)
+TRACE 300452:
+	java.nio.charset.Charset.defaultCharset(Charset.java:586)
+	java.lang.StringCoding.encode(StringCoding.java:282)
+	java.lang.String.getBytes(String.java:986)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:35)
+TRACE 300453:
+	org.pangu.tree.ElementNode.generate(ElementNode.java:32)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:94)
+	org.pangu.tree.RootNode.generate(RootNode.java:34)
+TRACE 300459:
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:69)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:94)
+	org.pangu.tree.RootNode.generate(RootNode.java:34)
+	org.pangu.PanguGen.generate(PanguGen.java:34)
+TRACE 300462:
+	org.pangu.tree.ElementNode.generate(ElementNode.java:79)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:94)
+	org.pangu.tree.RootNode.generate(RootNode.java:34)
+TRACE 300463:
+	java.util.ArrayList.size(ArrayList.java:177)
+	java.util.AbstractList$Itr.hasNext(AbstractList.java:339)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:66)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+TRACE 300466:
+	java.lang.StringCoding.encode(StringCoding.java:282)
+	java.lang.String.getBytes(String.java:986)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:35)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+TRACE 300468:
+	java.lang.String.getBytes(String.java:986)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:34)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:94)
+TRACE 300469:
+	java.lang.ThreadLocal.get(ThreadLocal.java:125)
+	java.lang.StringCoding.deref(StringCoding.java:46)
+	java.lang.StringCoding.encode(StringCoding.java:258)
+	java.lang.StringCoding.encode(StringCoding.java:284)
+TRACE 300470:
+	java.io.OutputStream.write(OutputStream.java:99)
+	java.io.OutputStream.write(OutputStream.java:58)
+	org.pangu.tree.PanguNode.print(PanguNode.java:115)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:48)
+TRACE 300471:
+	java.io.OutputStream.write(OutputStream.java:99)
+	java.io.OutputStream.write(OutputStream.java:58)
+	org.pangu.tree.PanguNode.print(PanguNode.java:115)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:49)
+TRACE 300472:
+	org.pangu.tree.generators.StringGenerator.generate(StringGenerator.java:23)
+	org.pangu.tree.DataNode.generate(DataNode.java:76)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:91)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+TRACE 300473:
+	sun.nio.cs.UTF_8.updatePositions(UTF_8.java:58)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:392)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:447)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:544)
+TRACE 300474:
+	java.nio.CharBuffer.<init>(CharBuffer.java:259)
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:52)
+	java.nio.CharBuffer.wrap(CharBuffer.java:350)
+	java.lang.StringCoding$StringEncoder.encode(StringCoding.java:238)
+TRACE 300475:
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:43)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:94)
+	org.pangu.tree.RootNode.generate(RootNode.java:34)
+	org.pangu.PanguGen.generate(PanguGen.java:34)
+TRACE 300476:
+	org.pangu.tree.ElementNode.generate(ElementNode.java:79)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:94)
+	org.pangu.tree.RootNode.generate(RootNode.java:34)
+TRACE 300477:
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:391)
+	java.lang.StringBuffer.append(StringBuffer.java:224)
+	org.pangu.tree.generators.StringGenerator.buildString(StringGenerator.java:36)
+	org.pangu.tree.generators.StringGenerator.generate(StringGenerator.java:23)
+TRACE 300479:
+	org.pangu.tree.ElementNode.generate(ElementNode.java:101)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:94)
+	org.pangu.tree.RootNode.generate(RootNode.java:34)
+TRACE 300481:
+	java.io.OutputStream.write(OutputStream.java:99)
+	java.io.OutputStream.write(OutputStream.java:58)
+	org.pangu.tree.PanguNode.print(PanguNode.java:115)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:76)
+TRACE 300483:
+	java.lang.StringCoding.encode(StringCoding.java:272)
+	java.lang.StringCoding.encode(StringCoding.java:284)
+	java.lang.String.getBytes(String.java:986)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:34)
+TRACE 300484:
+	java.io.OutputStream.write(OutputStream.java:58)
+	org.pangu.tree.PanguNode.print(PanguNode.java:115)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:107)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+TRACE 300485:
+	java.nio.Buffer.<init>(Buffer.java:177)
+	java.nio.CharBuffer.<init>(CharBuffer.java:259)
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:52)
+	java.nio.CharBuffer.wrap(CharBuffer.java:350)
+TRACE 300486:
+	java.nio.Buffer.<init>(Buffer.java:176)
+	java.nio.CharBuffer.<init>(CharBuffer.java:259)
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:52)
+	java.nio.CharBuffer.wrap(CharBuffer.java:350)
+TRACE 300487:
+	java.lang.String.subSequence(String.java:1972)
+	org.pangu.tree.generators.StringGenerator.buildString(StringGenerator.java:34)
+	org.pangu.tree.generators.StringGenerator.generate(StringGenerator.java:23)
+	org.pangu.tree.DataNode.generate(DataNode.java:76)
+TRACE 300489:
+	java.lang.StringCoding.encode(StringCoding.java:282)
+	java.lang.String.getBytes(String.java:986)
+	org.pangu.tree.DataNode.generate(DataNode.java:77)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:91)
+TRACE 300491:
+	java.util.AbstractList$Itr.<init>(AbstractList.java:318)
+	java.util.AbstractList.iterator(AbstractList.java:273)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:66)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+TRACE 300492:
+	java.lang.StringCoding.deref(StringCoding.java:46)
+	java.lang.StringCoding.encode(StringCoding.java:258)
+	java.lang.StringCoding.encode(StringCoding.java:284)
+	java.lang.String.getBytes(String.java:986)
+TRACE 300494:
+	java.lang.StringCoding.encode(StringCoding.java:272)
+	java.lang.StringCoding.encode(StringCoding.java:284)
+	java.lang.String.getBytes(String.java:986)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:40)
+TRACE 300495:
+	java.lang.StringCoding.encode(StringCoding.java:282)
+	java.lang.String.getBytes(String.java:986)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:39)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+TRACE 300496:
+	org.pangu.tree.generators.StringGenerator.buildString(StringGenerator.java:30)
+	org.pangu.tree.generators.StringGenerator.generate(StringGenerator.java:23)
+	org.pangu.tree.DataNode.generate(DataNode.java:76)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:91)
+TRACE 300497:
+	java.util.ArrayList.get(ArrayList.java:322)
+	java.util.AbstractList$Itr.next(AbstractList.java:345)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:66)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+TRACE 300498:
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:68)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:94)
+	org.pangu.tree.RootNode.generate(RootNode.java:34)
+	org.pangu.PanguGen.generate(PanguGen.java:34)
+TRACE 300499:
+	java.util.HashMap.put(HashMap.java:385)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:67)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:94)
+TRACE 300500:
+	java.io.OutputStream.write(OutputStream.java:99)
+	java.io.OutputStream.write(OutputStream.java:58)
+	org.pangu.tree.PanguNode.print(PanguNode.java:115)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:90)
+TRACE 300501:
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:447)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:544)
+	java.lang.StringCoding$StringEncoder.encode(StringCoding.java:240)
+	java.lang.StringCoding.encode(StringCoding.java:272)
+TRACE 300502:
+	java.lang.StringCoding.encode(StringCoding.java:272)
+	java.lang.StringCoding.encode(StringCoding.java:284)
+	java.lang.String.getBytes(String.java:986)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:39)
+TRACE 300503:
+	java.lang.StringCoding.encode(StringCoding.java:282)
+	java.lang.String.getBytes(String.java:986)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:73)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:58)
+TRACE 300504:
+	java.util.ArrayList.get(ArrayList.java:322)
+	java.util.AbstractList$Itr.next(AbstractList.java:345)
+	org.pangu.tree.SequenceNode.generate(SequenceNode.java:67)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:94)
+TRACE 300505:
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:391)
+	java.lang.StringBuffer.append(StringBuffer.java:224)
+	java.lang.StringBuffer.append(StringBuffer.java:284)
+	org.pangu.tree.generators.StringGenerator.buildString(StringGenerator.java:34)
+TRACE 300506:
+	java.lang.StringCoding.encode(StringCoding.java:272)
+	java.lang.StringCoding.encode(StringCoding.java:284)
+	java.lang.String.getBytes(String.java:986)
+	org.pangu.tree.ElementNode.generate(ElementNode.java:35)
+CPU SAMPLES BEGIN (total = 574) Sun Dec 12 17:08:46 2010
+rank   self  accum   count trace method
+   1 49.30% 49.30%     283 300079 java.net.SocketInputStream.socketRead0
+   2  6.79% 56.10%      39 300458 java.io.OutputStream.write
+   3  6.45% 62.54%      37 300457 java.io.OutputStream.write
+   4  5.23% 67.77%      30 300454 sun.nio.cs.UTF_8$Encoder.encodeArrayLoop
+   5  3.83% 71.60%      22 300465 java.nio.Buffer.<init>
+   6  3.66% 75.26%      21 300461 java.lang.AbstractStringBuilder.append
+   7  3.31% 78.57%      19 300460 java.lang.StringCoding$StringEncoder.encode
+   8  2.96% 81.53%      17 300464 java.lang.AbstractStringBuilder.append
+   9  1.39% 82.93%       8 300467 java.lang.String.<init>
+  10  0.70% 83.62%       4 300490 java.lang.StringCoding.encode
+  11  0.52% 84.15%       3 300480 java.lang.String.substring
+  12  0.52% 84.67%       3 300482 sun.nio.cs.UTF_8.updatePositions
+  13  0.52% 85.19%       3 300488 java.util.Arrays.copyOf
+  14  0.52% 85.71%       3 300493 java.util.ArrayList.get
+  15  0.52% 86.24%       3 300510 java.lang.Shutdown.halt0
+  16  0.35% 86.59%       2 300313 java.net.SocketOutputStream.socketWrite0
+  17  0.35% 86.93%       2 300455 java.lang.String.equals
+  18  0.35% 87.28%       2 300456 java.lang.ThreadLocal$ThreadLocalMap.access$000
+  19  0.35% 87.63%       2 300478 java.nio.HeapByteBuffer.<init>
+  20  0.17% 87.80%       1 300005 java.security.AccessController.doPrivileged
+  21  0.17% 87.98%       1 300012 sun.misc.URLClassPath$JarLoader.parseExtensionsDependencies
+  22  0.17% 88.15%       1 300020 sun.misc.URLClassPath$FileLoader.getResource
+  23  0.17% 88.33%       1 300034 java.security.ProtectionDomain.<clinit>
+  24  0.17% 88.50%       1 300037 java.lang.ClassLoader.defineClass1
+  25  0.17% 88.68%       1 300039 java.lang.AbstractStringBuilder.<init>
+  26  0.17% 88.85%       1 300062 java.net.URI.<clinit>
+  27  0.17% 89.02%       1 300078 java.lang.StringCoding.decode
+  28  0.17% 89.20%       1 300092 java.util.zip.InflaterInputStream.<init>
+  29  0.17% 89.37%       1 300093 java.util.zip.ZipFile.ensureOpen
+  30  0.17% 89.55%       1 300121 java.util.Arrays.copyOf
+  31  0.17% 89.72%       1 300145 sun.security.provider.X509Factory.engineGenerateCertificate
+  32  0.17% 89.90%       1 300173 java.lang.String.toUpperCase
+  33  0.17% 90.07%       1 300201 java.io.ByteArrayInputStream.skip
+  34  0.17% 90.24%       1 300208 java.util.HashMap.hash
+  35  0.17% 90.42%       1 300222 java.util.regex.Pattern.<clinit>
+  36  0.17% 90.59%       1 300243 java.math.BigInteger.oddModPow
+  37  0.17% 90.77%       1 300254 java.util.zip.Inflater.inflateBytes
+  38  0.17% 90.94%       1 300258 sun.reflect.generics.parser.SignatureParser.parseSimpleClassTypeSignature
+  39  0.17% 91.11%       1 300290 java.io.DataOutputStream.writeUTF
+  40  0.17% 91.29%       1 300296 java.lang.String.format
+  41  0.17% 91.46%       1 300314 java.util.zip.ZipFile.getEntry
+  42  0.17% 91.64%       1 300317 java.io.BufferedReader.readLine
+  43  0.17% 91.81%       1 300323 java.util.zip.ZipFile.read
+  44  0.17% 91.99%       1 300324 sun.misc.URLClassPath.getResource
+  45  0.17% 92.16%       1 300351 java.io.UnixFileSystem.getBooleanAttributes0
+  46  0.17% 92.33%       1 300360 java.beans.Introspector.getBeanInfo
+  47  0.17% 92.51%       1 300374 com.sun.org.apache.xerces.internal.parsers.SecuritySupport.getParentClassLoader
+  48  0.17% 92.68%       1 300401 com.sun.org.apache.xerces.internal.parsers.XML11Configuration.<init>
+  49  0.17% 92.86%       1 300437 com.sun.org.apache.xerces.internal.parsers.AbstractDOMParser.startDocument
+  50  0.17% 93.03%       1 300444 com.sun.org.apache.xerces.internal.dom.DeferredDocumentImpl.getNodeObject
+  51  0.17% 93.21%       1 300451 java.lang.StringCoding$StringEncoder.encode
+  52  0.17% 93.38%       1 300452 java.nio.charset.Charset.defaultCharset
+  53  0.17% 93.55%       1 300453 org.pangu.tree.ElementNode.generate
+  54  0.17% 93.73%       1 300459 org.pangu.tree.SequenceNode.generate
+  55  0.17% 93.90%       1 300462 org.pangu.tree.ElementNode.generate
+  56  0.17% 94.08%       1 300463 java.util.ArrayList.size
+  57  0.17% 94.25%       1 300466 java.lang.StringCoding.encode
+  58  0.17% 94.43%       1 300468 java.lang.String.getBytes
+  59  0.17% 94.60%       1 300469 java.lang.ThreadLocal.get
+  60  0.17% 94.77%       1 300470 java.io.OutputStream.write
+  61  0.17% 94.95%       1 300471 java.io.OutputStream.write
+  62  0.17% 95.12%       1 300472 org.pangu.tree.generators.StringGenerator.generate
+  63  0.17% 95.30%       1 300473 sun.nio.cs.UTF_8.updatePositions
+  64  0.17% 95.47%       1 300474 java.nio.CharBuffer.<init>
+  65  0.17% 95.64%       1 300475 org.pangu.tree.SequenceNode.generate
+  66  0.17% 95.82%       1 300476 org.pangu.tree.ElementNode.generate
+  67  0.17% 95.99%       1 300477 java.lang.AbstractStringBuilder.append
+  68  0.17% 96.17%       1 300479 org.pangu.tree.ElementNode.generate
+  69  0.17% 96.34%       1 300481 java.io.OutputStream.write
+  70  0.17% 96.52%       1 300483 java.lang.StringCoding.encode
+  71  0.17% 96.69%       1 300484 java.io.OutputStream.write
+  72  0.17% 96.86%       1 300485 java.nio.Buffer.<init>
+  73  0.17% 97.04%       1 300486 java.nio.Buffer.<init>
+  74  0.17% 97.21%       1 300487 java.lang.String.subSequence
+  75  0.17% 97.39%       1 300489 java.lang.StringCoding.encode
+  76  0.17% 97.56%       1 300491 java.util.AbstractList$Itr.<init>
+  77  0.17% 97.74%       1 300492 java.lang.StringCoding.deref
+  78  0.17% 97.91%       1 300494 java.lang.StringCoding.encode
+  79  0.17% 98.08%       1 300495 java.lang.StringCoding.encode
+  80  0.17% 98.26%       1 300496 org.pangu.tree.generators.StringGenerator.buildString
+  81  0.17% 98.43%       1 300497 java.util.ArrayList.get
+  82  0.17% 98.61%       1 300498 org.pangu.tree.SequenceNode.generate
+  83  0.17% 98.78%       1 300499 java.util.HashMap.put
+  84  0.17% 98.95%       1 300500 java.io.OutputStream.write
+  85  0.17% 99.13%       1 300501 sun.nio.cs.UTF_8$Encoder.encodeLoop
+  86  0.17% 99.30%       1 300502 java.lang.StringCoding.encode
+  87  0.17% 99.48%       1 300503 java.lang.StringCoding.encode
+  88  0.17% 99.65%       1 300504 java.util.ArrayList.get
+  89  0.17% 99.83%       1 300505 java.lang.AbstractStringBuilder.append
+  90  0.17% 100.00%       1 300506 java.lang.StringCoding.encode
+CPU SAMPLES END

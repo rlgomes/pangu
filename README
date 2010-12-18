@@ -1,0 +1,70 @@
+Pangu - Grammar driven data generation library
+----------------------------------------------
+
+Introduction
+------------
+
+This library is capable of generating various types of data from an XML Grammar
+such as DTD, XSD or RNG. Once you compile your XML grammar into a PanguGen you 
+can then pass it the Decorator you'd like along with the GenInfo object and it 
+will generate your output document. One thing to note about this library is that
+it will attempt to generate documents of the size you specify but it must 
+firstly conform to the grammar used otherwise the document itself would not be
+valid. Through some testing we've been able to verify that the margin of error 
+is not more than 10% unless you try to generate an object much smaller than your
+grammar would ever allow. For example, if your grammar had an attribute which 
+had a restriction of a minimum of 100 bytes but you wanted a 32 byte document 
+obviously there isn't any 32 byte document possible 
+
+Currently Implemented
+---------------------
+
+We can currently generate documents from XSDs and we support only a subset of
+XSD types which are the following:
+
+  * string, integer, positiveInteger, decimal and boolean
+
+We also only support length and pattern restrictions for the time being. I will
+put together a roadmap soon on adding the other features but for now just 
+wanted to put the code up. 
+ 
+How to use
+-----------
+
+You need to first compile your grammar into a PanguGen object and this can be 
+done for XSD objects like so:
+
+ PanguGen gen = XSDCompiler.compile(doc);
+
+The doc is of course a Document object parsed from your XSD file. You can then 
+use the gen object directly and pass it the OutputStream and GenInfo object that
+describe the type of data to generate and you will have a new document generated.
+
+Here is a small example of generating an XML document:
+
+ ByteArrayOutputStream os = new ByteArrayOutputStream();
+ PanguDecorator formatter = new XMLDecorator();
+ gen.generate(os, formatter, "list", 1024);
+
+Notice that to generate a JSON document you'd just need to change the formatter
+object used.
+
+Building
+--------
+
+You should be able to build pangu from the command line by just issuing:
+
+ ant build
+
+You will then have your pangu.jar in the build directory ready to be included in
+one of your existing Java projects.
+
+Why is it called Pangu?
+-----------------------
+
+Well since this library is responsible for "creating" other documents and being 
+the geek I am I looked up a few of the names of gods of creation and found 
+pangu in chinese mythology that pangu was the creator of the universe and that
+he balanced the ying & yang of the world by holding up the sky away from melding
+with the earth. Seemed like a good name for a library that was responsible for 
+generating documents in a clean and balanced way. 
